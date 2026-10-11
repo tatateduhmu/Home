@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tata Teduhmu | Beranda</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts (Serif, Sans, Script) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600&amp;family=Inter:wght@300;400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-dark': '#243026',
+                        'brand-light': '#F6F5F2',
+                        'brand-accent': '#8C9A8E',
+                        'brand-brown': '#6B4423', 
+                    },
+                    fontFamily: {
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['"Inter"', 'sans-serif'],
+                        'script': ['"Dancing Script"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #F6F5F2; color: #243026; overflow-x: hidden; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .hero-overlay { background: linear-gradient(to bottom, rgba(36,48,38,0.2) 0%, rgba(36,48,38,0.7) 100%); }
+        .btn-arrow { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+        .btn-arrow:hover { gap: 1rem; color: #8C9A8E; }
+        
+        .bg-waves {
+            background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #F6F5F2 1px, transparent 1px, transparent 100%);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+
+        /* Transisi Smooth untuk Menu Bar & Ikon */
+        #nav-menu {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        #btn-close, #btn-open {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Carousel responsif: 3 logo pada layar lebar, 2 pada layar hampir kotak, 1 pada portrait. */
+        #klien-window {
+            --visible-logos: 3;
+            width: min(33.333vw, 900px);
+            margin-inline: auto;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.45) 0%, #000 12%, #000 88%, rgba(0,0,0,.45) 100%);
+            mask-image: linear-gradient(to right, rgba(0,0,0,.45) 0%, #000 12%, #000 88%, rgba(0,0,0,.45) 100%);
+        }
+        #klien-track {
+            display: flex;
+            width: calc(100% * 10 / var(--visible-logos));
+            will-change: transform;
+        }
+        .klien-item {
+            flex: 0 0 10%;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-inline: .5rem;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .klien-item span { max-width:100%; overflow:hidden; text-overflow:ellipsis; font-size:clamp(.72rem, 1.1vw, 1.5rem); }
+        @media (min-aspect-ratio: 1/1) {
+            #klien-window { --visible-logos: 3; width: min(33.333vw, 900px); }
+        }
+        @media (min-aspect-ratio: 4/5) and (max-aspect-ratio: 1/1) {
+            #klien-window { --visible-logos: 2; width: 50vw; }
+        }
+        @media (max-aspect-ratio: 4/5) {
+            #klien-window { --visible-logos: 1; width: 100vw; }
+            .klien-item { padding-inline: .6rem; }
+            .klien-item span { font-size: clamp(.9rem, 4vw, 1.3rem); }
+        }
+
+        /* Editorial visual system: warm paper, botanical ink, generous whitespace */
+        :root { --paper: #F4F1E9; --paper-light: #FBFAF6; --ink: #26352B; --muted: #6D746B; --accent: #8A7658; }
+        body { background: var(--paper-light); color: var(--ink); }
+        .eyebrow { font-size: .7rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+        /* Remove decorative section rules; separation comes from whitespace and tone. */
+        section, footer { border-top: 0 !important; border-bottom: 0 !important; }
+        .services-section { background: var(--paper-light); }
+        .service-card { display:block; color:inherit; text-decoration:none; }
+        .service-image-wrap { position:relative; height:clamp(320px, 37vw, 520px); overflow:hidden; background:#e5e2d9; }
+        .service-image { width:100%; height:100%; display:block; object-fit:cover; transition:transform .8s cubic-bezier(.2,.7,.2,1); }
+        .service-card:hover .service-image { transform:scale(1.045); }
+        .service-image-number { position:absolute; left:1rem; top:1rem; padding:.45rem .65rem; color:#fff; background:rgba(38,53,43,.76); font-size:.7rem; letter-spacing:.12em; }
+        .service-card-copy { padding:1.4rem 0 0; }
+        .service-card-copy h3 { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,2.1vw,2rem); font-weight:400; }
+        .service-card-copy p { margin-top:.85rem; max-width:34rem; color:var(--muted); font-size:.9rem; line-height:1.8; }
+        .service-arrow { font-size:1.4rem; transition:transform .25s ease; }
+        .service-card:hover .service-arrow { transform:translate(3px,-3px); }
+        .principles-section { background:var(--paper); }
+        .principle-row { position:relative; display:flex; align-items:center; min-height:300px; margin:0 0 5rem; }
+        .principle-row:last-child { margin-bottom:0; }
+        .principle-art { width:min(40%, 390px); aspect-ratio:1.15/1; display:flex; align-items:center; justify-content:center; background:#C8C6BE; color:#343B33; text-align:center; font-size:clamp(1.7rem,3vw,2.6rem); line-height:1.35; font-family:'Inter',sans-serif; font-weight:300; }
+        .principle-card { position:relative; z-index:1; width:min(48%, 460px); min-height:245px; padding:clamp(1.5rem,3vw,3rem); background:#FBFAF6; margin-left:-3rem; box-shadow:0 12px 36px rgba(38,53,43,.055); }
+        .principle-card h3 { margin:.5rem 0 1rem; font-family:'Playfair Display',serif; font-size:clamp(2rem,3vw,3rem); line-height:1.1; font-weight:400; }
+        .principle-card p:not(.principle-number) { color:var(--muted); font-size:.9rem; line-height:1.8; }
+        .principle-number { color:var(--accent); font-size:.65rem; letter-spacing:.16em; text-transform:uppercase; }
+        .principle-link { display:inline-flex; align-items:center; gap:.7rem; margin-top:1.5rem; padding-bottom:.35rem; border-bottom:1px solid #A69A84; color:var(--ink); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; }
+        .principle-link span { font-size:1rem; transition:transform .2s ease; }
+        .principle-link:hover span { transform:translate(3px,-3px); }
+        .principle-space { flex-direction:row-reverse; }
+        .principle-space .principle-card { margin-left:0; margin-right:-3rem; }
+        .principle-space .principle-art { background:#D4D2CB; }
+        .principle-nature .principle-art { background:#BFC6B8; }
+        @media (min-width:768px) {
+            .principle-human { margin-left:3%; }
+            .principle-space { margin-right:3%; }
+            .principle-nature { margin-left:13%; }
+        }
+        @media (max-width:767px) {
+            .principle-row, .principle-space { flex-direction:column; align-items:stretch; margin:0 0 3.5rem; }
+            .principle-art { width:82%; min-height:220px; aspect-ratio:1.2/1; }
+            .principle-card, .principle-space .principle-card { width:88%; min-height:0; margin:-2rem 0 0 auto; padding:1.5rem; }
+            .principle-space .principle-art { margin-left:auto; }
+            .principle-nature .principle-card { margin-left:auto; }
+            .service-image-wrap { height: min(112vw, 440px); }
+        }
+\n    </style>
+</head>
+<body class="font-sans antialiased text-base">
+<!-- Preloader Screen -->
+<div class="fixed inset-0 z-[100] bg-[#F6F5F2] flex items-center justify-center transition-opacity duration-1000" id="preloader">
+<h1 class="font-serif text-3xl md:text-5xl uppercase tracking-widest text-brand-brown animate-pulse">
+            Tata teduhmu
+        </h1>
+</div>
+<!-- HEADER DINAMIS (Glassmorphism & Animasi Baru) -->
+<header class="fixed w-full top-0 z-50 transition-all duration-300 py-4 px-8 md:px-12 flex justify-between items-center bg-transparent" id="navbar">
+<!-- Logo Header -->
+<a class="font-serif text-2xl md:text-3xl tracking-widest font-medium z-30 text-brand-brown" href="index.html">
+            Tata teduhmu
+        </a>
+<!-- Wadah Interaksi Menu Kanan -->
+<div class="relative flex items-center h-full z-25">
+<!-- Tombol Hamburger / Garis 3 (Minimize) -->
+<button class="absolute right-0 text-3xl text-gray-800 opacity-0 pointer-events-none focus:outline-none" id="btn-open">
+                ☰
+            </button>
+<!-- Menu Maximize (Slide tipis dari kanan + fade) -->
+<nav class="flex items-center gap-6 md:gap-10 transform translate-x-4 opacity-0 pointer-events-none px-6 py-2 md:p-0 rounded-full md:rounded-none" id="nav-menu">
+<div class="hidden md:flex gap-8 text-xs tracking-widest uppercase font-medium text-gray-800">
+<a class="hover:text-brand-brown transition-colors" href="index.html">Beranda</a>
+<a class="hover:text-brand-brown transition-colors" href="layanan.html">Layanan</a>
+<a class="hover:text-brand-brown transition-colors" href="#klien">Klien</a>
+<a class="hover:text-brand-brown transition-colors" href="artikel.html">Artikel</a>
+<a class="hover:text-brand-brown transition-colors" href="tentang.html">Tentang Kami</a>
+<a class="hover:text-brand-brown transition-colors" href="kontak.html">Kontak</a>
+</div>
+<!-- Ikon X (Zoom out & fade in) -->
+<button class="text-xl md:text-2xl text-gray-800 scale-75 opacity-0 focus:outline-none hover:text-brand-brown" id="btn-close">
+                    ✕
+                </button>
+</nav>
+</div>
+</header>
+<!-- 1. FRONT BANNER (1 Bagian / 100vh) -->
+<section class="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+<img alt="Taman bergaya hutan tropis dengan vegetasi rimbun" class="absolute inset-0 w-full h-full object-cover z-0" src="https://images.unsplash.com/photo-1607320879139-1bb689f6a68f?q=80&w=928&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"/>
+<div class="absolute inset-0 hero-overlay z-0"></div>
+<div class="relative z-10 text-center px-4 mt-20 reveal active w-full flex flex-col items-center">
+<h2 class="font-sans text-brand-light text-sm md:text-base tracking-[0.3em] uppercase mb-6">Landscape Architecture</h2>
+<h1 class="font-serif text-brand-light text-5xl md:text-7xl lg:text-8xl font-normal leading-tight mb-16">
+                Ruang hijau yang estetik,<br/>nyaman, dan fungsional.
+            </h1>
+            <p class="font-sans text-brand-light font-light text-lg max-w-2xl mx-auto opacity-90">
+                Studio arsitektur lanskap dan kontraktor perancangan ruang hijau yang mengubah lahan terbuka menjadi ekosistem yang estetik, nyaman, dan fungsional.
+            </p>
+<a class="inline-flex items-center justify-center px-8 py-4 border border-white text-white font-sans text-sm tracking-[0.2em] uppercase hover:bg-white hover:text-brand-dark transition-colors duration-300" href="kontak.html">
+                Kontak Kami
+            </a>
+</div>
+</section>
+<!-- 2. ABOUT (0.5 Bagian / 50vh) -->
+<section class="min-h-[50vh] flex flex-col md:flex-row gap-16 items-center px-8 md:px-16 lg:px-32 py-16">
+<div class="md:w-1/2 reveal">
+<h3 class="font-sans text-sm tracking-[0.2em] uppercase text-gray-400 mb-6">Tentang Kami</h3>
+<h2 class="font-serif text-4xl md:text-5xl leading-tight mb-8">Berakar dari dedikasi<br/>sejak tahun 1980-an.</h2>
+<p class="font-sans font-light leading-relaxed mb-10 text-gray-600 text-lg">
+                Berpusat di Banjarbaru, Tata Teduhmu hadir membawa komitmen untuk mengubah lahan terbuka menjadi ekosistem ruang luar yang estetik. Klien cukup duduk manis dan menikmati hasil akhirnya.
+            </p>
+<a class="btn-arrow text-brand-dark border-b border-brand-dark pb-1 text-sm uppercase tracking-widest" href="tentang.html">Kenali Kami Lebih Jauh <span>→</span></a>
+</div>
+<div class="md:w-1/2 w-full h-[300px] md:h-[400px] reveal delay-100">
+<img alt="Aktivitas di nursery tanaman" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1775681150283-04970adf1b98?auto=format&amp;fit=crop&amp;q=85&amp;w=1400" style="filter:grayscale(100%)"/>
+</div>
+</section>
+<!-- 3. TESTIMONI (0.5 Bagian / 50vh) -->
+<section class="min-h-[50vh] flex flex-col justify-center px-8 md:px-16 lg:px-32 bg-white py-16 reveal">
+<h3 class="text-center font-sans text-sm tracking-[0.2em] uppercase text-gray-400 mb-12">Apa Kata Klien</h3>
+<div class="relative max-w-4xl mx-auto w-full flex items-center justify-between">
+<button class="text-gray-400 hover:text-brand-dark transition-colors p-2 md:p-4 focus:outline-none z-20" id="prev-testi">
+<svg fill="none" height="24" stroke="currentColor" stroke-width="1.5" width="24"><path d="M15 19l-7-7 7-7"></path></svg>
+</button>
+<div class="flex-grow text-center overflow-hidden relative h-[250px] md:h-[220px]">
+<div class="testi-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 opacity-100 z-10">
+<p class="font-sans font-medium text-gray-400 uppercase tracking-widest text-xs mb-4">Proyek Median Jalan</p>
+<p class="font-script text-3xl md:text-5xl text-gray-800 leading-relaxed mb-6">"Awalnya saya skeptis karena kami adjust budget, tapi ternyata hasilnya tetap memuaskan."</p>
+<div class="font-sans font-semibold text-xs text-brand-dark uppercase tracking-widest">Indra Bunyamin Residence</div>
+</div>
+<div class="testi-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 opacity-0 z-0">
+<p class="font-sans font-medium text-gray-400 uppercase tracking-widest text-xs mb-2">Retail Online</p>
+<div class="text-yellow-400 text-xl mb-3">★★★★★</div>
+<p class="font-script text-3xl md:text-5xl text-gray-800 leading-relaxed mb-6">"Alhamdulillah aman semua, ga ada yang patah dan mati."</p>
+<div class="font-sans font-semibold text-xs text-brand-dark uppercase tracking-widest">Buyer Shopee</div>
+</div>
+<div class="testi-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 opacity-0 z-0">
+<p class="font-sans font-medium text-gray-400 uppercase tracking-widest text-xs mb-4">Pengadaan Tanaman Pot</p>
+<p class="font-script text-3xl md:text-5xl text-gray-800 leading-relaxed mb-6">"Tim sangat responsif, dan solutif dalam menghadapi masalah di lapangan."</p>
+<div class="font-sans font-semibold text-xs text-brand-dark uppercase tracking-widest">A/N Coffee Rantau</div>
+</div>
+<div class="testi-slide absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 opacity-0 z-0">
+<p class="font-sans font-medium text-gray-400 uppercase tracking-widest text-xs mb-2">Retail Online</p>
+<div class="text-yellow-400 text-xl mb-3">★★★★★</div>
+<p class="font-script text-3xl md:text-5xl text-gray-800 leading-relaxed mb-6">"Terimakasih gan barang sudah aku terima. Jujur puas banget liat nya besar"</p>
+<div class="font-sans font-semibold text-xs text-brand-dark uppercase tracking-widest">Buyer Shopee</div>
+</div>
+</div>
+<button class="text-gray-400 hover:text-brand-dark transition-colors p-2 md:p-4 focus:outline-none z-20" id="next-testi">
+<svg fill="none" height="24" stroke="currentColor" stroke-width="1.5" width="24"><path d="M9 5l7 7-7 7"></path></svg>
+</button>
+</div>
+<div class="flex justify-center gap-3 mt-4" id="testi-indicators">
+<button class="testi-dot w-1.5 h-1.5 rounded-full bg-brand-dark transition-opacity opacity-100"></button>
+<button class="testi-dot w-1.5 h-1.5 rounded-full bg-brand-dark transition-opacity opacity-20"></button>
+<button class="testi-dot w-1.5 h-1.5 rounded-full bg-brand-dark transition-opacity opacity-20"></button>
+<button class="testi-dot w-1.5 h-1.5 rounded-full bg-brand-dark transition-opacity opacity-20"></button>
+</div>
+</section>
+<!-- 4. LAYANAN KAMI -->
+<section class="services-section bg-[#F8F7F2] px-6 md:px-12 lg:px-24 py-24 md:py-32" id="layanan">
+<div class="max-w-3xl mb-14 md:mb-20">
+<p class="eyebrow mb-5">Layanan Kami</p>
+<h2 class="font-serif text-4xl md:text-6xl leading-tight text-[#26352B]">Dari gagasan menjadi lanskap yang hidup.</h2>
+<p class="mt-6 max-w-xl text-[#666B61] leading-relaxed">Pendekatan menyeluruh untuk merancang, menyediakan, dan mewujudkan ruang luar yang lebih bermakna.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+<a class="service-card group" href="layanan.html#perancangan">
+<div class="service-image-wrap">
+<img alt="Contoh siteplan desain lanskap" class="service-image" loading="lazy" src="https://images.unsplash.com/photo-1717250264930-9e06b67f3c82?auto=format&fit=crop&q=85&w=1400"/>
+<span class="service-image-number">01</span>
+</div>
+<div class="service-card-copy">
+<div class="flex items-center justify-between gap-4">
+<h3>Perancangan</h3><span class="service-arrow">↗</span>
+</div>
+<p>Analisis tapak, konsep desain, gambar kerja teknis, dan visualisasi untuk membantu setiap keputusan terasa terarah.</p>
+</div>
+</a>
+<a class="service-card group" href="layanan.html#pengadaan">
+<div class="service-image-wrap">
+<img alt="Pengiriman tanaman dan material ke truk" class="service-image" loading="lazy" src="https://images.unsplash.com/photo-1693225427415-085a86a639d4?auto=format&fit=crop&q=85&w=1400"/>
+<span class="service-image-number">02</span>
+</div>
+<div class="service-card-copy">
+<div class="flex items-center justify-between gap-4">
+<h3>Pengadaan</h3><span class="service-arrow">↗</span>
+</div>
+<p>Suplai tanaman, pohon peneduh, dan material pendukung dari kebutuhan hunian hingga skala proyek.</p>
+</div>
+</a>
+<a class="service-card group" href="layanan.html#pengerjaan">
+<div class="service-image-wrap">
+<img alt="Pekerja melaksanakan konstruksi dan penanaman taman" class="service-image" loading="lazy" src="https://images.unsplash.com/photo-1761415451360-3847fc21bc79?auto=format&fit=crop&q=85&w=1400"/>
+<span class="service-image-number">03</span>
+</div>
+<div class="service-card-copy">
+<div class="flex items-center justify-between gap-4">
+<h3>Pengerjaan</h3><span class="service-arrow">↗</span>
+</div>
+<p>Pelaksanaan hardscape dan softscape dengan perhatian pada detail, fungsi, dan kondisi lapangan.</p>
+</div>
+</a>
+</div>
+</section>
+<!-- 5. KLIEN KAMI -->
+<section class="min-h-[30vh] flex flex-col justify-center bg-white py-12 overflow-hidden reveal" id="klien">
+<h3 class="text-center font-sans text-xs tracking-[0.2em] uppercase text-gray-400 mb-12">Mitra &amp; Klien Kami</h3>
+<div aria-label="Carousel mitra dan klien" id="klien-window">
+<div class="items-center transition-transform duration-700 ease-in-out" id="klien-track">
+<div class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">Pertamina</span></div>
+<div class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">88 Hotel</span></div>
+<div class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">Bun Yamin</span></div>
+<div class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">ULM</span></div>
+<div class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">Telkom</span></div>
+<div aria-hidden="true" class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">Pertamina</span></div>
+<div aria-hidden="true" class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">88 Hotel</span></div>
+<div aria-hidden="true" class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">Bun Yamin</span></div>
+<div aria-hidden="true" class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">ULM</span></div>
+<div aria-hidden="true" class="klien-item"><span class="font-serif text-lg md:text-2xl text-gray-400 uppercase">Telkom</span></div>
+</div>
+</div>
+</section>
+<!-- 6. ARTIKEL (1 Bagian / 100vh) -->
+<section class="relative min-h-screen w-full bg-white flex items-center py-20 overflow-hidden">
+<div class="container mx-auto px-8 md:px-16 lg:px-32 flex flex-col md:flex-row items-center justify-end w-full">
+<div class="z-20 bg-[#FBFBFA] p-8 md:p-10 shadow-[0_10px_40px_rgba(0,0,0,0.05)] w-full md:w-[350px] md:-mr-24 mb-[-4rem] md:mb-0 reveal relative border border-gray-50">
+<h3 class="font-sans text-[10px] tracking-[0.2em] uppercase text-brand-accent mb-3">Artikel Terbaru</h3>
+<h2 class="font-serif text-2xl md:text-3xl text-gray-800 leading-tight mb-4">Mengenal Crinum Lily</h2>
+<p class="font-sans font-light text-gray-600 text-sm leading-relaxed mb-6">
+                    Menghadirkan keindahan spesimen langka dari alam liar ke dalam lanskap hunian modern. Pelajari karakter tapaknya.
+                </p>
+<a class="btn-arrow text-gray-800 text-xs tracking-widest uppercase" href="artikel-1.html">View <span>→</span></a>
+</div>
+<div class="z-10 w-full md:w-[60%] lg:w-[50%] h-[350px] md:h-[450px] reveal delay-100">
+<img alt="Bunga lily putih" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1772539677045-d7f28b87c09f?auto=format&amp;fit=crop&amp;q=85&amp;w=1400">
+</img></div>
+</div>
+</section>
+<!-- 7. PRINSIP: MANUSIA, RUANG, ALAM -->
+<section class="principles-section relative bg-[#F4F1E9] py-24 md:py-32 overflow-hidden" id="prinsip">
+<div class="container mx-auto px-6 md:px-12 lg:px-24">
+<div class="max-w-2xl mb-16 md:mb-24">
+<p class="eyebrow mb-5">Cara Kami Memandang Lanskap</p>
+<h2 class="font-serif text-4xl md:text-6xl leading-tight text-[#26352B]">Prinsip yang menuntun<br class="hidden md:block"/> setiap ruang hijau.</h2>
+</div>
+<div class="principle-row principle-human">
+<div class="principle-art">
+<span>sketsa<br/>ilustrasi<br/>manusia</span>
+</div>
+<article class="principle-card">
+<p class="principle-number">01 / Prinsip</p>
+<h3>Manusia</h3>
+<p>Ruang luar yang baik dimulai dari memahami manusia yang menggunakannya—kebutuhan, kebiasaan, dan kenyamanan mereka.</p>
+<a aria-label="Pelajari prinsip Manusia" class="principle-link" href="prinsip.html#manusia">Pelajari prinsip <span aria-hidden="true">↗</span></a>
+</article>
+</div>
+<div class="principle-row principle-space">
+<div class="principle-art">
+<span>sketsa<br/>ilustrasi<br/>ruang</span>
+</div>
+<article class="principle-card">
+<p class="principle-number">02 / Prinsip</p>
+<h3>Ruang</h3>
+<p>Setiap titik tanam, jalur sirkulasi, dan proporsi dirancang agar fungsi serta estetika menyatu dengan karakter tapak.</p>
+<a aria-label="Pelajari prinsip Ruang" class="principle-link" href="prinsip.html#ruang">Pelajari prinsip <span aria-hidden="true">↗</span></a>
+</article>
+</div>
+<div class="principle-row principle-nature">
+<div class="principle-art">
+<span>sketsa<br/>ilustrasi<br/>alam</span>
+</div>
+<article class="principle-card">
+<p class="principle-number">03 / Prinsip</p>
+<h3>Alam</h3>
+<p>Kami memilih vegetasi dan pendekatan yang selaras dengan iklim, kondisi lahan, serta ekosistem di sekitarnya.</p>
+<a aria-label="Pelajari prinsip Alam" class="principle-link" href="prinsip.html#alam">Pelajari prinsip <span aria-hidden="true">↗</span></a>
+</article>
+</div>
+</div>
+</section>
+<!-- 8. CALL TO ACTION / MARI WUJUDKAN (0.5 Bagian / 50vh) -->
+<section class="relative min-h-[50vh] w-full flex items-center justify-center overflow-hidden reveal py-16">
+<img alt="Natural Aesthetics" class="absolute inset-0 w-full h-full object-cover z-0" src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&amp;w=2000&amp;auto=format&amp;fit=crop">
+<div class="absolute inset-0 bg-brand-dark/70 z-0"></div>
+<div class="relative z-10 text-center text-white px-4">
+<h2 class="font-serif text-4xl md:text-5xl lg:text-6xl mb-10 leading-tight">Mari wujudkan ruang hijau<br/>ideal anda.</h2>
+<a class="px-10 py-4 bg-[#25D366] hover:bg-green-600 text-white font-sans text-sm tracking-[0.2em] uppercase transition-colors rounded-sm inline-flex items-center gap-3" href="https://wa.me/6289699539954" target="_blank">
+<svg class="w-5 h-5 fill-white" viewbox="0 0 24 24"><path d="M12.012 2c5.506 0 9.988 4.478 9.988 9.984 0 2.713-1.077 5.263-3.033 7.186L17.5 22l-2.73-1.458c-1.714.8-3.606 1.233-5.558 1.233-5.505 0-9.988-4.478-9.988-9.984C-.776 6.478 3.707 2 12.012 2zm.006 1.666c-4.596 0-8.33 3.725-8.33 8.318 0 1.83.6 3.533 1.66 4.922l-1.06 3.195 3.324-1.054c1.378 1.01 3.035 1.583 4.8 1.583 4.594 0 8.328-3.725 8.328-8.318 0-4.593-3.734-8.318-8.328-8.318zm4.364 11.233c-.227-.113-1.34-.66-1.547-.735-.208-.075-.36-.113-.51.113-.15.227-.584.735-.716.886-.132.15-.264.17-.49.057-.226-.114-.956-.35-1.82-1.123-.672-.6-1.125-1.343-1.257-1.57-.132-.226-.014-.35.1-.462.1-.102.227-.264.34-.396.114-.132.15-.226.227-.377.076-.15.038-.283-.018-.396-.057-.113-.51-1.226-.698-1.68-.182-.442-.368-.383-.51-.39-.132-.007-.282-.007-.433-.007-.15 0-.396.056-.603.283-.207.226-.79.773-.79 1.884 0 1.113.808 2.188.922 2.34.113.15 1.594 2.43 3.864 3.413.54.232.962.37 1.29.475.542.17 1.036.146 1.425.088.435-.064 1.34-.547 1.528-1.075.188-.528.188-.98.132-1.075-.056-.094-.207-.15-.434-.264z"></path></svg>
+                Konsultasi Gratis
+            </a>
+</div>
+</img></section>
+<!-- 9. QUOTES (0.5 Bagian / 50vh) -->
+<section class="min-h-[50vh] flex flex-col justify-center px-8 text-center bg-white py-16 reveal">
+<h2 class="font-script text-4xl md:text-5xl lg:text-6xl text-brand-brown leading-tight">
+            "Kami yang tata,<br/>kamu yang teduh."
+        </h2>
+</section>
+<!-- FOOTER -->
+<footer class="bg-grey-800 pt-20 pb-8 px-8 md:px-16 lg:px-24">
+<div class="flex flex-col lg:flex-row justify-between gap-12 lg:gap-8 mb-16">
+<div class="lg:w-[35%] flex flex-col text-white">
+<h2 class="font-serif text-4xl md:text-5xl tracking-widest mb-8 text-brand-brown font-medium">Tata teduhmu</h2>
+<p class="font-sans font-light text-sm leading-relaxed mb-6 whitespace-pre-line text-brand-brown">Jl. A. Yani km.21,
+Kel. Landasan Ulin Bar., Kec. Liang Anggang,
+Kota Banjar Baru, Kalimantan Selatan 70722</p>
+<p class="font-sans font-light text-sm text-brand-brown">
+                    Telepon: 089699539954<br/>
+                    Email: tatateduhmu@gmail.com
+                </p>
+</div>
+<div class="lg:w-[40%] grid grid-cols-2 md:grid-cols-3 gap-8 font-sans font-light text--brand-brown text-sm">
+<div class="flex flex-col gap-3">
+<h4 class="font-bold mb-2">Main</h4>
+<a class="hover:text-brand-dark transition-colors" href="about.html">About</a>
+<a class="hover:text-brand-dark transition-colors" href="layanan.html">Layanan</a>
+<a class="hover:text-brand-dark transition-colors" href="kontak.html">kontak</a>
+<a class="hover:text-brand-dark transition-colors" href="artikel.html">Artikel</a>
+<a class="hover:text-brand-dark transition-colors" href="klien.html">Klien</a>
+<a class="hover:text-brand-dark transition-colors" href="karir.html">Karir</a>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold mb-2">About</h4>
+<a class="hover:text-brand-dark transition-colors" href="sejarah.html">Sejarah</a>
+<a class="hover:text-brand-dark transition-colors" href="pengelola.html">Pengelola</a>
+<a class="hover:text-brand-dark transition-colors" href="prinsip.html">Prinsip</a>
+<a class="hover:text-brand-dark transition-colors" href="galeri.html">Galeri</a>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="font-bold mb-2">Services</h4>
+<a class="hover:text-brand-dark transition-colors" href="layanan.html#perancangan">Perancangan</a>
+<a class="hover:text-brand-dark transition-colors" href="layanan.html#pengadaan">Pengadaan</a>
+<a class="hover:text-brand-dark transition-colors" href="layanan.html#pengerjaan">Pengerjaan</a>
+</div>
+</div>
+<div class="lg:w-[25%] flex flex-col text-brand-brown">
+<h4 class="font-bold font-sans text-sm mb-2">Ikuti kami</h4>
+<p class="font-sans font-light text-xs mb-4">Kenali kami di sosial media berikut</p>
+<div class="flex gap-6 mb-10">
+<a class="text-brand-brown hover:text-brand-dark transition-colors" href="#">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path></svg>
+</a>
+<a class="text-brand-brown hover:text-brand-dark transition-colors" href="#">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+</a>
+<a class="text-brand-brown hover:text-brand-dark transition-colors" href="#">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.2c0 1.96-.5 3.96-1.72 5.48-1.15 1.41-2.91 2.3-4.71 2.53-1.99.27-4.08-.1-5.71-1.32-1.75-1.32-2.88-3.41-2.93-5.59-.06-2.61 1.22-5.18 3.53-6.49 1.61-.92 3.55-1.1 5.35-.61V13.8c-1.39-.33-2.91-.12-4.1.75-1.18.87-1.84 2.31-1.74 3.79.1 1.48.97 2.82 2.31 3.49 1.34.66 2.97.64 4.27-.14 1.13-.67 1.89-1.86 1.96-3.18V.02h.01z"></path></svg>
+</a>
+</div>
+<h4 class="font-bold font-sans text-sm mb-3">Konsultasi gratis</h4>
+<a class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-green-600 transition-colors shadow-sm" href="https://wa.me/6289699539954" target="_blank">
+<svg class="w-6 h-6 fill-brand-brown" viewbox="0 0 24 24"><path d="M12.012 2c5.506 0 9.988 4.478 9.988 9.984 0 2.713-1.077 5.263-3.033 7.186L17.5 22l-2.73-1.458c-1.714.8-3.606 1.233-5.558 1.233-5.505 0-9.988-4.478-9.988-9.984C-.776 6.478 3.707 2 12.012 2zm.006 1.666c-4.596 0-8.33 3.725-8.33 8.318 0 1.83.6 3.533 1.66 4.922l-1.06 3.195 3.324-1.054c1.378 1.01 3.035 1.583 4.8 1.583 4.594 0 8.328-3.725 8.328-8.318 0-4.593-3.734-8.318-8.328-8.318zm4.364 11.233c-.227-.113-1.34-.66-1.547-.735-.208-.075-.36-.113-.51.113-.15.227-.584.735-.716.886-.132.15-.264.17-.49.057-.226-.114-.956-.35-1.82-1.123-.672-.6-1.125-1.343-1.257-1.57-.132-.226-.014-.35.1-.462.1-.102.227-.264.34-.396.114-.132.15-.226.227-.377.076-.15.038-.283-.018-.396-.057-.113-.51-1.226-.698-1.68-.182-.442-.368-.383-.51-.39-.132-.007-.282-.007-.433-.007-.15 0-.396.056-.603.283-.207.226-.79.773-.79 1.884 0 1.113.808 2.188.922 2.34.113.15 1.594 2.43 3.864 3.413.54.232.962.37 1.29.475.542.17 1.036.146 1.425.088.435-.064 1.34-.547 1.528-1.075.188-.528.188-.98.132-1.075-.056-.094-.207-.15-.434-.264z"></path></svg>
+</a>
+</div>
+</div>
+<div class="text-center font-sans font-bold text-xs mt-8">
+<span class="text-brand-brown px-4 py-2 inline-block">
+                Copyright © 2026 All Rights Reserved Tata Teduhmu
+            </span>
+</div>
+</footer>
+<!-- Scripts -->
+<script>
+        // Logika Header Maximize / Minimize Sesuai Permintaan Baru
+        const btnOpen = document.getElementById('btn-open');
+        const btnClose = document.getElementById('btn-close');
+        const navMenu = document.getElementById('nav-menu');
+        const navbar = document.getElementById('navbar');
+
+        function setHeaderState(maximize) {
+            if(maximize) {
+                // Maximize: Menu slide tipis dari kanan + fade in, icon x zoom-out & fade-in
+                navMenu.classList.remove('translate-x-8', 'opacity-0', 'pointer-events-none');
+                navMenu.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
+                
+                btnClose.classList.remove('scale-50', 'opacity-0');
+                btnClose.classList.add('scale-100', 'opacity-100');
+
+                btnOpen.classList.remove('opacity-100', 'pointer-events-auto');
+                btnOpen.classList.add('opacity-0', 'pointer-events-none');
+
+                navbar.classList.remove('bg-white/40', 'backdrop-blur-md', 'shadow-sm');
+                navbar.classList.add('bg-transparent');
+            } else {
+                // Minimize: Menu cukup fade-out bersih tanpa slide, ikon X morph ke garis 3
+                navMenu.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
+                navMenu.classList.add('translate-x-8', 'opacity-0', 'pointer-events-none');
+                
+                btnClose.classList.remove('scale-100', 'opacity-100');
+                btnClose.classList.add('scale-50', 'opacity-0');
+
+                btnOpen.classList.remove('opacity-0', 'pointer-events-none');
+                btnOpen.classList.add('opacity-100', 'pointer-events-auto');
+
+                // Header Glassmorphism (Sangat transparan + blur)
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-white/40', 'backdrop-blur-md', 'shadow-sm');
+                    navbar.classList.remove('bg-transparent');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                setHeaderState(false);
+            } else {
+                setHeaderState(true); 
+            }
+        });
+
+        btnOpen.addEventListener('click', () => setHeaderState(true));
+        btnClose.addEventListener('click', () => setHeaderState(false));
+
+        // Preloader
+        document.addEventListener('DOMContentLoaded', function() {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.classList.add('opacity-0');
+                setTimeout(() => { preloader.style.display = 'none'; }, 1000); 
+            }, 800); 
+        });
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // JS SLIDER TESTIMONI
+        const testiSlides = document.querySelectorAll('.testi-slide');
+        const testiDots = document.querySelectorAll('.testi-dot');
+        const prevTesti = document.getElementById('prev-testi');
+        const nextTesti = document.getElementById('next-testi');
+        let currentTesti = 0;
+        let testiAutoSlide;
+
+        function showTesti(index) {
+            testiSlides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.remove('opacity-0', 'z-0');
+                    slide.classList.add('opacity-100', 'z-10');
+                } else {
+                    slide.classList.remove('opacity-100', 'z-10');
+                    slide.classList.add('opacity-0', 'z-0');
+                }
+            });
+            testiDots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.remove('opacity-20');
+                    dot.classList.add('opacity-100');
+                } else {
+                    dot.classList.add('opacity-20');
+                    dot.classList.remove('opacity-100');
+                }
+            });
+        }
+
+        function resetTestiInterval() {
+            clearInterval(testiAutoSlide);
+            testiAutoSlide = setInterval(() => {
+                currentTesti = (currentTesti === testiSlides.length - 1) ? 0 : currentTesti + 1;
+                showTesti(currentTesti);
+            }, 3000);
+        }
+
+        resetTestiInterval();
+
+        prevTesti.addEventListener('click', () => {
+            currentTesti = (currentTesti === 0) ? testiSlides.length - 1 : currentTesti - 1;
+            showTesti(currentTesti);
+            resetTestiInterval();
+        });
+
+        nextTesti.addEventListener('click', () => {
+            currentTesti = (currentTesti === testiSlides.length - 1) ? 0 : currentTesti + 1;
+            showTesti(currentTesti);
+            resetTestiInterval();
+        });
+
+        testiDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentTesti = index;
+                showTesti(currentTesti);
+                resetTestiInterval();
+            });
+        });
+
+        // CAROUSEL KLIEN: satu langkah tiap 2,5 detik atau saat scroll turun.
+        const klienTrack = document.getElementById('klien-track');
+        const klienWindow = document.getElementById('klien-window');
+        const klienCount = 5;
+        const klienStepMs = 2500;
+        const klienTransitionMs = 700;
+        let klienIndex = 0;
+        let klienTransitioning = false;
+        let klienAutoTimer;
+        let lastScrollY = window.scrollY;
+        let scrollStepQueued = false;
+
+        function getVisibleKlienCount() {
+            const value = getComputedStyle(klienWindow).getPropertyValue('--visible-logos').trim();
+            return Math.max(1, Number(value) || 3);
+        }
+
+        function stepKlienCarousel() {
+            if (klienTransitioning) return;
+            klienTransitioning = true;
+            klienIndex += 1;
+            klienTrack.style.transition = `transform ${klienTransitionMs}ms ease-in-out`;
+            klienTrack.style.transform = `translateX(-${klienIndex * 10}%)`;
+
+            if (klienIndex === klienCount) {
+                window.setTimeout(() => {
+                    klienTrack.style.transition = 'none';
+                    klienIndex = 0;
+                    klienTrack.style.transform = 'translateX(0)';
+                    void klienTrack.offsetWidth;
+                    klienTransitioning = false;
+                }, klienTransitionMs);
+            } else {
+                window.setTimeout(() => { klienTransitioning = false; }, klienTransitionMs);
+            }
+        }
+
+        function resetKlienTimer() {
+            window.clearInterval(klienAutoTimer);
+            klienAutoTimer = window.setInterval(stepKlienCarousel, klienStepMs);
+        }
+
+        resetKlienTimer();
+
+        // Scroll turun yang bermakna hanya memicu satu langkah; scroll kecil tidak berulang-ulang.
+        window.addEventListener('scroll', () => {
+            const currentY = window.scrollY;
+            if (currentY > lastScrollY + 30 && !scrollStepQueued) {
+                scrollStepQueued = true;
+                stepKlienCarousel();
+                window.setTimeout(() => { scrollStepQueued = false; }, 500);
+            }
+            lastScrollY = currentY;
+        }, { passive: true });
+
+        // Jaga posisi dan ukuran tetap wajar ketika orientasi/ukuran layar berubah.
+        window.addEventListener('resize', () => {
+            if (!klienTransitioning) {
+                klienTrack.style.transition = 'none';
+                klienTrack.style.transform = `translateX(-${klienIndex * 10}%)`;
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>

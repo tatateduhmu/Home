@@ -1,12 +1,13 @@
 /* =====================================================================
    site.js  |  Tata Teduhmu  |  dipakai SEMUA halaman
-   Daftar isi: 1 NAVBAR | 2 WARNA HEADER | 3 REVEAL & SKETSA | 4 KONTEN TERBARU
+   Daftar isi: 1 NAVBAR | 2 WARNA HEADER | 3 REVEAL & SKETSA | 4 (dihapus)
                5 LIST + NOMOR HALAMAN | 6 GALERI | 7 FORM KONTAK
-   (Slider testimoni & carousel klien ada di carousel.js, hanya dimuat di index.html)
+   (Slider testimoni & carousel klien ada di carousel.js
    ===================================================================== */
 
 /* ===== 1 NAVBAR =====
-   Desktop (>=1024px): menu terbuka saat di paling atas, menciut jadi tombol saat di-scroll.
+   Desktop (>=1024px): menu terbuka saat di paling atas; SELALU menciut jadi tombol begitu halaman digulir
+   (juga bila sebelumnya dibuka manual lewat tombol).
    HP & tablet (<1024px): dropdown kecil; tertutup saat scroll, klik di luar, atau tekan Esc. */
 const navbar = document.getElementById('navbar');
 const btnToggle = document.getElementById('btn-toggle');
@@ -21,8 +22,8 @@ function setOpen(v) {
 function onScroll() {
     const top = window.scrollY <= 50;                 // 50 = jarak scroll (px) sebelum bar jadi transparan-blur
     navbar.classList.toggle('scrolled', !top);
-    if (mqDesktop.matches && top !== wasTop) setOpen(top);
-    if (!mqDesktop.matches && navbar.dataset.open === 'true') setOpen(false);
+    if (mqDesktop.matches && top && !wasTop) setOpen(true);                 // desktop: kembali ke paling atas = menu terbuka lagi
+    if (!top && navbar.dataset.open === 'true') setOpen(false);             // semua perangkat: setiap gulir ke bawah = menu langsung menciut
     wasTop = top;
 }
 btnToggle.addEventListener('click', e => { e.stopPropagation(); setOpen(navbar.dataset.open !== 'true'); });
@@ -52,33 +53,11 @@ document.querySelectorAll('.data-dark, .data-light').forEach(el => bgObserver.ob
 document.querySelectorAll('.sk *').forEach(n => n.setAttribute('pathLength', '1'));
 const revealObserver = new IntersectionObserver(entries => {
     entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('active'); revealObserver.unobserve(en.target); } });
-}, { threshold: 0.12 });
+}, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-/* ===== 4 AMBIL KONTEN TERBARU (kartu Proyek & Artikel di index.html) =====
-   Membaca proyek.html / artikel.html, mengambil postingan PERTAMA (elemen ber-atribut data-post), lalu mengisi
-   foto, judul, ringkasan, dan link pada kartu. Jika gagal, isi cadangan di HTML tetap dipakai.
-   Hanya bekerja setelah web diupload ke hosting (bukan dari file komputer). */
-async function loadLatest(prefix, page) {
-    const imgEl = document.getElementById(prefix + '-img');
-    if (!imgEl) return;                                  // halaman ini tidak punya kartu tsb
-    try {
-        const res = await fetch(page, { cache: 'no-cache' });
-        if (!res.ok) return;
-        const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-        const post = doc.querySelector('[data-post]');
-        if (!post) return;
-        const abs = u => new URL(u, new URL(page, location.href)).href;
-        const img = post.querySelector('img'), head = post.querySelector('h1,h2,h3'),
-              desc = post.querySelector('p'), link = post.querySelector('a[href]');
-        const title = document.getElementById(prefix + '-title');
-        if (img)  { imgEl.src = abs(img.getAttribute('src')); imgEl.alt = img.alt || imgEl.alt; }
-        if (head) title.textContent = head.textContent.trim();
-        if (desc) document.getElementById(prefix + '-desc').textContent = desc.textContent.trim();
-        if (link) title.href = abs(link.getAttribute('href'));
-    } catch (err) { /* abaikan: pakai isi cadangan */ }
-}
-[['proyek', 'proyek.html'], ['artikel', 'artikel.html']].forEach(([p, f]) => loadLatest(p, f));
+/* ===== 4 (dihapus di redesign) =====
+   Kartu "Proyek/Artikel Terbaru" di beranda kini ditulis langsung di index.html agar jalan lewat file://. Perbarui manual saat ada postingan baru. */
 
 /* ===== 5 LIST + NOMOR HALAMAN (proyek.html, artikel.html) =====
    Semua postingan ditulis di HTML (terbaru di atas). Script menampilkan maksimal data-per (default 10) per halaman,
